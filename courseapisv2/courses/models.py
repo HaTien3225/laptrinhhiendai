@@ -38,6 +38,26 @@ class Lesson(BaseModel):
     content = RichTextField()
     image = models.ImageField(upload_to='lessons/%Y/%m/')
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    tags =models.ManyToManyField('Tag')
 
     def __str__(self):
         return self.subject
+
+
+class Tag(BaseModel):
+    name=models.CharField(max_length=50, unique=True)
+
+
+class Interaction(BaseModel):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    lesson=models.ForeignKey(Lesson, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract=True
+
+class Comment(Interaction):
+    content=models.CharField(max_length=255, null=False)
+
+class Like(Interaction):
+    class Meta:
+        unique_together=('user', 'lesson')

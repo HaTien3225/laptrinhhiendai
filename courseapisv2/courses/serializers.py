@@ -1,4 +1,4 @@
-from courses.models import Category, Course, Lesson
+from courses.models import Category, Course, Lesson, Comment, User
 from rest_framework import serializers
 
 
@@ -32,3 +32,22 @@ class LessonSerializer(BaseSerializer):
     class Meta:
         model = Lesson
         fields = ['id', 'subject', 'created_date', 'updated_date', 'image']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Tag
+        fields=['id','name']
+
+class LessonDetailsSerializer(LessonSerializer):
+    tags=TagSerializer(many=True)
+    class Meta:
+        model=LessonSerializer.Meta.model
+        fields=LessonSerializer.Meta.fields +['content', 'tags']
+
+
+class UserSelializer(serializers.ModelSerializer):
+    class Meta:
+        models=User
+        fields=["id"]
+        
